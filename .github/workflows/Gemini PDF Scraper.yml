@@ -1,0 +1,40 @@
+# .github/workflows/main.yml
+
+name: Gemini PDF Scraper Workflow
+
+on:
+  # ตั้งเวลาให้รันทุกๆ 30 นาที
+  schedule:
+    - cron: '*/30 * * * *'
+  # ทำให้สามารถกดรันเองได้เพื่อทดสอบ
+  workflow_dispatch:
+
+jobs:
+  scrape-and-commit:
+    permissions:
+      contents: write # ให้สิทธิ์ในการเขียนไฟล์กลับเข้า Repository
+
+    runs-on: ubuntu-latest
+    steps:
+      - name: Check out repository
+        uses: actions/checkout@v4
+
+      - name: Set up Python 3.10
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.10'
+
+      - name: Install Python dependencies
+        run: pip install -r requirements.txt
+
+      - name: Create .env file
+        run: echo "GOOGLE_API_KEY=${{ secrets.GOOGLE_API_KEY }}" > .env
+
+      - name: Run the scraper script
+        run: python main.py
+
+      - name: Commit and push the output file
+        uses: stefanzweifel/git-auto-commit-action@v5
+        with:
+          commit_message: "BOT: Update PO data from PDF"
+          file_pattern: output.json
