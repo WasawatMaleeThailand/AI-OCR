@@ -5,7 +5,7 @@ name: Gemini PDF Scraper Workflow
 on:
   # ตั้งเวลาให้รันทุกๆ 30 นาที
   schedule:
-    - cron: '*/30 * * * *'
+    - cron: '*/120 * * * *'
   # ทำให้สามารถกดรันเองได้เพื่อทดสอบ
   workflow_dispatch:
 
